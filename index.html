@@ -1,91 +1,81 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手机幻灯片</title>
+    <title>全屏滑动页面</title>
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
-
+        body, html {
+            height: 100%;
+            overflow: hidden; /* 禁止页面滚动 */
+        }
         .container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .slide {
-            height: 100vh;
             width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            text-align: center;
-            color: white;
+            height: 300%; /* 三个页面高度的总和 */
+            position: relative;
+            transition: transform 0.5s ease-in-out; /* 平滑切换动画 */
         }
-
-        .red { background-color: red; }
-        .green { background-color: green; }
-        .blue { background-color: blue; }
-
-        /* 控制滑动过渡 */
-        .up, .down {
+        .page {
+            width: 100%;
+            height: 100%;
             position: absolute;
-            width: 100%;
-            height: 100%;
+        }
+        #page1 {
+            background-color: red;
             top: 0;
-            left: 0;
+        }
+        #page2 {
+            background-color: green;
+            top: 100%;
+        }
+        #page3 {
+            background-color: blue;
+            top: 200%;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="slide red">红色背景</div>
-        <div class="slide green">绿色背景</div>
-        <div class="slide blue">蓝色背景</div>
+    <div class="container" id="container">
+        <div class="page" id="page1"></div>
+        <div class="page" id="page2"></div>
+        <div class="page" id="page3"></div>
     </div>
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const container = document.querySelector('.container');
-        
-        let startY = 0;
-        let endY = 0;
+        let currentPage = 0; // 当前页面索引
+        const totalPages = 3; // 总页面数
+        const container = document.getElementById("container");
 
-        // 监听触摸事件
-        container.addEventListener('touchstart', (e) => {
+        let startY = 0; // 触摸起始位置
+        let endY = 0;   // 触摸结束位置
+
+        // 监听触摸开始
+        container.addEventListener("touchstart", function (e) {
             startY = e.touches[0].clientY;
         });
 
-        container.addEventListener('touchmove', (e) => {
-            endY = e.touches[0].clientY;
-        });
+        // 监听触摸结束
+        container.addEventListener("touchend", function (e) {
+            endY = e.changedTouches[0].clientY;
 
-        container.addEventListener('touchend', () => {
             if (startY - endY > 50) {
                 // 向上滑动
-                if (currentSlide < slides.length - 1) {
-                    currentSlide++;
-                    container.style.transform = `translateY(-${100 * currentSlide}vh)`;
-                }
-            } else if (endY - startY > 50) {
-                // 向下滑动
-                if (currentSlide > 0) {
-                    currentSlide--;
-                    container.style.transform = `translateY(-${100 * currentSlide}vh)`;
-                }
+                nextPage();
             }
         });
-    </script>
 
+        // 滑动到下一页
+        function nextPage() {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                container.style.transform = `translateY(-${currentPage * 100}%)`;
+            }
+        }
+    </script>
 </body>
 </html>
