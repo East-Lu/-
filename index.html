@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>鼠标滑动换页</title>
+    <title>触控滑动换页</title>
     <style>
         * {
             margin: 0;
@@ -51,18 +51,19 @@
         const totalPages = 3; // 总页面数
         const container = document.getElementById("container");
 
-        let startY = 0; // 鼠标按下时的Y坐标
-        let endY = 0;   // 鼠标松开时的Y坐标
+        let startY = 0; // 触摸起始Y坐标
+        let endY = 0;   // 触摸结束Y坐标
 
-        // 监听鼠标按下事件，获取起始Y坐标
-        document.addEventListener("mousedown", function(event) {
-            startY = event.clientY;
+        // 监听触摸开始事件
+        container.addEventListener("touchstart", function (event) {
+            startY = event.touches[0].clientY; // 获取触摸起始Y坐标
         });
 
-        // 监听鼠标松开事件，获取结束Y坐标并判断滑动方向
-        document.addEventListener("mouseup", function(event) {
-            endY = event.clientY;
+        // 监听触摸结束事件
+        container.addEventListener("touchend", function (event) {
+            endY = event.changedTouches[0].clientY; // 获取触摸结束Y坐标
 
+            // 判断滑动方向
             if (startY - endY > 50) {
                 // 向上滑动，切换到下一页
                 nextPage();
