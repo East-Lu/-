@@ -1,98 +1,91 @@
-<html lang="zh-CN"><head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>成语文生图展示</title>
+    <title>手机幻灯片</title>
     <style>
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .idiom-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .pinyin {
-            color: #666;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-
-        .prompts {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        .prompts ul {
+        body, html {
             margin: 0;
-            padding-left: 20px;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
         }
 
-        .image-container {
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            height: 100vh;
             width: 100%;
-            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            text-align: center;
+            color: white;
         }
 
-        .image-container img {
+        .red { background-color: red; }
+        .green { background-color: green; }
+        .blue { background-color: blue; }
+
+        /* 控制滑动过渡 */
+        .up, .down {
+            position: absolute;
             width: 100%;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .process {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+            height: 100%;
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
 <body>
-    <div class="idiom-card">
-        <h1>破釜沉舟</h1>
-        <div class="pinyin">pò fǔ chén zhōu</div>
 
-        <div class="prompts">
-            <h3>文生图提示词：</h3>
-            <ul>
-                <li>Close-up,showing the spectacle of flames engulfing the warship.</li>
-                <li>The fire shines on the waves,and the whole picture is dominated by red and orange.</li>
-                <li>Sparks,smoke rising,The interweaving of waves and flames creates a strong visual impact.</li>
-            </ul>
-        </div>
-
-        <div class="image-container">
-            <img src="pofuchenzhou.png" alt="破釜沉舟">
-        </div>
-
-        <div class="process">
-            <h3>生成过程：</h3>
-            <p>
-                使用liblib进行创作
-            </p>
-            <ul>
-                <li>负面提示词：ng_deepnegative_v1_75t,(badhandv4:1.2),EasyNegative,(worst quality:2)</li>
-                <li>采用Euler采样器，设置30步采样以确保图像质量</li>
-                <li>重点优化火光和水面的自然互动效果</li>
-                <li>提示词着重强调画面的光影效果</li>
-            </ul>
-        </div>
+    <div class="container">
+        <div class="slide red">红色背景</div>
+        <div class="slide green">绿色背景</div>
+        <div class="slide blue">蓝色背景</div>
     </div>
 
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.querySelector('.container');
+        
+        let startY = 0;
+        let endY = 0;
 
-</body></html>
+        // 监听触摸事件
+        container.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            endY = e.touches[0].clientY;
+        });
+
+        container.addEventListener('touchend', () => {
+            if (startY - endY > 50) {
+                // 向上滑动
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    container.style.transform = `translateY(-${100 * currentSlide}vh)`;
+                }
+            } else if (endY - startY > 50) {
+                // 向下滑动
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    container.style.transform = `translateY(-${100 * currentSlide}vh)`;
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
