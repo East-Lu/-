@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全屏滑动页面</title>
+    <title>点击切换页面</title>
     <style>
         * {
             margin: 0;
@@ -37,6 +37,19 @@
             background-color: blue;
             top: 200%;
         }
+        .button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -46,34 +59,22 @@
         <div class="page" id="page3"></div>
     </div>
 
+    <!-- 切换按钮 -->
+    <div class="button" onclick="nextPage()">下一页</div>
+
     <script>
         let currentPage = 0; // 当前页面索引
         const totalPages = 3; // 总页面数
         const container = document.getElementById("container");
 
-        let startY = 0; // 触摸起始位置
-        let endY = 0;   // 触摸结束位置
-
-        // 监听触摸开始
-        container.addEventListener("touchstart", function (e) {
-            startY = e.touches[0].clientY;
-        });
-
-        // 监听触摸结束
-        container.addEventListener("touchend", function (e) {
-            endY = e.changedTouches[0].clientY;
-
-            if (startY - endY > 50) {
-                // 向上滑动
-                nextPage();
-            }
-        });
-
-        // 滑动到下一页
+        // 点击按钮切换页面
         function nextPage() {
             if (currentPage < totalPages - 1) {
                 currentPage++;
                 container.style.transform = `translateY(-${currentPage * 100}%)`;
+            } else {
+                currentPage = 0; // 如果到达最后一页，返回第一页
+                container.style.transform = `translateY(0)`;
             }
         }
     </script>
